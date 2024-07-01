@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { db } from "./Firebase/Config";
 import {
+
   addDoc,
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   setDoc,
 } from "firebase/firestore";
@@ -75,6 +75,11 @@ const App = () => {
     }
 
   }
+
+// Handle Update
+
+
+
 
   const handleEdit=(item)=>{
       setFormValue({
