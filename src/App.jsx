@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { db } from "./Firebase/Config";
 import {
-
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
-  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 const App = () => {
@@ -16,6 +15,8 @@ const App = () => {
     fatherName: "",
   });
   const [fetch, setFetch] = useState([]);
+  const [show, setShow] = useState(false);
+  const [editID,setEditID]=useState(null)
 
   // Submit Data============
 
@@ -42,11 +43,7 @@ const App = () => {
     try {
       const collectionRef = collection(db, "Demo");
       const response = await getDocs(collectionRef);
-      setFetch(
-        response.docs.map((doc) => ({ id:doc.id,
-          ...doc.data(),
-        }))
-      );
+      setFetch(response.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -61,32 +58,44 @@ const App = () => {
     }));
   };
 
-// Handle Delete
+  // Handle Delete
 
-  const handleDelete=async(id)=>{
+  const handleDelete = async (id) => {
     try {
-      
-      const docRef = doc(db, "Demo",id);
-      await deleteDoc(docRef)
-      alert("Delete Successfully")
-      fetchData()
+      const docRef = doc(db, "Demo", id);
+      await deleteDoc(docRef);
+      alert("Delete Successfully");
+      fetchData();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
+  };
 
-  }
+  // Handle Update
 
-// Handle Update
+  const handleUpdate = async () => {
+    try {
+      const docRef = doc(db, "Demo",editID);
+      await updateDoc(docRef, {
+        Name: formValue.Name,
+        fatherName: formValue.fatherName,
+      });
+      alert("Update Successfully");
+      fetchData()
+      setShow(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-
-
-
-  const handleEdit=(item)=>{
-      setFormValue({
-        Name:item.Name,
-        fatherName:item.fatherName
-      })
-  }
+  const handleEdit = (item,id) => {
+    setEditID(id)
+    setFormValue({
+      Name: item.Name,
+      fatherName: item.fatherName,
+    });
+    setShow(true);
+  };
 
   // useEffect===========
 
@@ -111,14 +120,18 @@ const App = () => {
           name="fatherName"
           onChange={handleChange}
         />
-        <button onClick={handleSubmit}>Create</button>
+        {show ? (
+          <button onClick={handleUpdate}>Update</button>
+        ) : (
+          <button onClick={handleSubmit}>Create</button>
+        )}
         <div>
           {fetch.map((item, index) => (
             <div key={index}>
               <div> {item.Name}</div>
               <div> {item.Name}</div>
-              <button  onClick={()=>handleDelete(item.id)} >Delete</button>
-              <button  onClick={()=>handleEdit(item)} >Edit</button>
+              <button onClick={() => handleDelete(item.id)}>Delete</button>
+              <button onClick={() => handleEdit(item,item.id)}>Edit</button>
             </div>
           ))}
         </div>
