@@ -8,7 +8,7 @@ const App = () => {
     name: "",
     rollNumber: "",
   });
-  const [fetch, setFetch] = useState();
+  const [fetch, setFetch] = useState([]);
   console.log(fetch.name)
 
   const handleChange = (e) => {
@@ -75,12 +75,13 @@ const App = () => {
       </div>
 
       <div>
-        {fetch.map((item, index) => {
-          <div key={index}>
+        {fetch.map((item) => (
+          <div key={item.id}>
             <div>{item.name}</div>
             <div>{item.rollNumber}</div>
           </div>
-        })}
+        ))}
+       
       </div>
     </div>
   );
