@@ -1,32 +1,38 @@
 import React, { useState } from "react";
 import "./App.css";
 import { db } from "./Firebase/Config";
+import { addDoc, collection } from "firebase/firestore";
 
 const App = () => {
+  const [data, setData] = useState({
+    name: "",
+    rollNumber: "",
+  });
 
-    const [data,setData]=useState({
-      Name:"",
-      rollNumber:""
-      
-    })
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-
-    const handleChange=(e)=>{
-        const {name,value}=e.target;
-        setData((prev)=>({
-          ...prev,[name]:value
-        }))
+  // submit Data
+  const handleSubmit = async () => {
+    try {
+      const collectionRef = collection(db, "test");
+      await addDoc(collectionRef, data);
+      alert("Data Submited Successfully");
+    } catch (error) {
+      console.log(error);
     }
-
-    // submit Data
-
-
+  };
 
   return (
     <div>
-      <form action="" className="form">
+      <div className="form">
         <input
-        name="name"
+          name="name"
           type="text"
           placeholder="Enter your Name"
           onChange={handleChange}
@@ -34,14 +40,14 @@ const App = () => {
         />
         <br />
         <input
-         name="rollNumber"
-          type="text"
+          name="rollNumber"
+          type="number"
           placeholder="Enter Your Roll Number"
           onChange={handleChange}
           value={data.rollNumber}
         />
-        <button>Add</button>
-      </form>
+        <button onClick={handleSubmit}>Add</button>
+      </div>
     </div>
   );
 };
