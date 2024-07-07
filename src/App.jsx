@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import "./App.css";
 import { db } from "./Firebase/Config";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 const App = () => {
   const [data, setData] = useState({
     name: "",
     rollNumber: "",
   });
+  const [fetch, setFetch] = useState();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -28,6 +29,18 @@ const App = () => {
     }
   };
 
+  // Fetch Data
+
+const fetchData= async()=>{
+      try {
+        const collectionRef=collection(db,"test");
+        const response=await getDoc(collectionRef);
+        
+      } catch (error) {
+        console.log(error)
+        
+      }
+}
   return (
     <div>
       <div className="form">
