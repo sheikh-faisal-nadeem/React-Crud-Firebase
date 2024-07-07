@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { db } from "./Firebase/Config";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 
 const App = () => {
   const [data, setData] = useState({
@@ -9,6 +9,7 @@ const App = () => {
     rollNumber: "",
   });
   const [fetch, setFetch] = useState();
+  console.log(fetch.name)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,16 +32,27 @@ const App = () => {
 
   // Fetch Data
 
-const fetchData= async()=>{
-      try {
-        const collectionRef=collection(db,"test");
-        const response=await getDoc(collectionRef);
-        
-      } catch (error) {
-        console.log(error)
-        
-      }
-}
+  const fetchData = async () => {
+    try {
+      const collectionRef = collection(db, "test");
+      const response = await getDocs(collectionRef);
+      setFetch(
+        response.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // UseState
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
       <div className="form">
@@ -49,7 +61,7 @@ const fetchData= async()=>{
           type="text"
           placeholder="Enter your Name"
           onChange={handleChange}
-          value={data.Name}
+          value={data.name}
         />
         <br />
         <input
@@ -60,6 +72,15 @@ const fetchData= async()=>{
           value={data.rollNumber}
         />
         <button onClick={handleSubmit}>Add</button>
+      </div>
+
+      <div>
+        {fetch.map((item, index) => {
+          <div key={index}>
+            <div>{item.name}</div>
+            <div>{item.rollNumber}</div>
+          </div>
+        })}
       </div>
     </div>
   );
