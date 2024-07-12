@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+import { auth, db, storage } from "./Firebase/Config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import "./App.css";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const App = () => {
+  const [localUrl, setLocalUrl] = useState("");
+  const [file, setFile] = useState("");
   const [data, setData] = useState({
     name: "",
     rollNumber: "",
@@ -19,7 +25,50 @@ const App = () => {
 
   // handleImageChange
 
+  const handleImageChange = (e) => {
+    const img = e?.target?.files[0];
+    const url = URL.createObjectURL(img);
+    setLocalUrl(url);
+    setFile(img);
+  };
+
   // submit Data
+
+  const handleSubmit = async () => {
+    try {
+      const authUser = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      const uid = authUser?.user?.uid;
+      alert("User Creaded");
+      const imageUpload = ref(storage, `Test/profileImage ${uid}`);
+      await uploadBytes(imageUpload, file);
+
+      const downloadUrl = await getDownloadURL(imageUpload);
+      alert("image Uploaded");
+
+      const collectionRef = collection(db, "Test");
+      const docRef = doc(collectionRef, uid);
+      const formData = {
+        ...data,
+        profileImage: downloadUrl,
+      };
+      await setDoc(docRef, formData);
+
+      alert("Data Submited Successfully");
+      setData({
+        name: "",
+        rollNumber: "",
+        email: "",
+        password: "",
+      });
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
 
   return (
     <div>
@@ -31,7 +80,7 @@ const App = () => {
           name="Profileimage"
           type="file"
           placeholder="Enter your Name"
-          onChange={handleImage}
+          onChange={handleImageChange}
         />
 
         <input
