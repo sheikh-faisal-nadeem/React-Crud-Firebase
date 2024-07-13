@@ -53,10 +53,14 @@ const App = () => {
       alert("Image Upload Successfully");
       const downloadUrl = await getDownloadURL(imageUpload);
 
-
       // submit Form Data
       const collectionRef = collection(db, "Test");
-      addDoc(collectionRef, data);
+      const docRef = doc(collectionRef, uid);
+      const formData = {
+        ...data,
+        ProfileImage: downloadUrl,
+      };
+      await setDoc(docRef, formData);
       alert("Data Submited Successfully");
     } catch (error) {
       console.log(error);
