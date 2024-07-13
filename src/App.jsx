@@ -3,10 +3,11 @@ import { auth, db, storage } from "./Firebase/Config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import "./App.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 const App = () => {
   const [localUrl, setLocalUrl] = useState("");
+
   const [file, setFile] = useState("");
   const [data, setData] = useState({
     name: "",
@@ -51,12 +52,11 @@ const App = () => {
       await uploadBytes(imageUpload, file);
       alert("Image Upload Successfully");
       const downloadUrl = await getDownloadURL(imageUpload);
+
+
+      // submit Form Data
       const collectionRef = collection(db, "Test");
-      const formData = doc(collectionRef, data);
-      await setDoc({
-        ...formData,
-        ProfileImage: downloadUrl,
-      });
+      addDoc(collectionRef, data);
       alert("Data Submited Successfully");
     } catch (error) {
       console.log(error);
