@@ -33,17 +33,36 @@ const App = () => {
   };
 
   // submit Data
-  const handleSubmit=()=>{
-    
-  }
+  const handleSubmit = async () => {
+    try {
+      // Authentication
 
+      const authUser = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      uid = authUser?.user?.uid;
+      alert("User Created Successfully");
 
+      // UploadImage
 
-
-
-
-
-  const handleSubmit = async () => {};
+      const imageUpload = ref(storage, `Test/${uid}`);
+      await uploadBytes(imageUpload, file);
+      alert("Image Upload Successfully");
+      const downloadUrl = await getDownloadURL(imageUpload);
+      const collectionRef = collection(db, "Test");
+      const formData = doc(collectionRef, data);
+      await setDoc({
+        ...formData,
+        ProfileImage: downloadUrl,
+      });
+      alert("Data Submited Successfully");
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
 
   return (
     <div>
