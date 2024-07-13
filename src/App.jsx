@@ -42,7 +42,7 @@ const App = () => {
         data.email,
         data.password
       );
-      uid = authUser?.user?.uid;
+      const uid = authUser?.user?.uid;
       alert("User Created Successfully");
 
       // UploadImage
