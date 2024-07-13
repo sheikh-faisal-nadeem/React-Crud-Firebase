@@ -27,48 +27,23 @@ const App = () => {
 
   const handleImageChange = (e) => {
     const img = e?.target?.files[0];
-    const url = URL.createObjectURL(img);
-    setLocalUrl(url);
+    const imgUrl = URL.createObjectURL(img);
+    setLocalUrl(imgUrl);
     setFile(img);
   };
 
   // submit Data
+  const handleSubmit=()=>{
+    
+  }
 
-  const handleSubmit = async () => {
-    try {
-      const authUser = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      const uid = authUser?.user?.uid;
-      alert("User Creaded");
-      const imageUpload = ref(storage, `Test/profileImage ${uid}`);
-      await uploadBytes(imageUpload, file);
 
-      const downloadUrl = await getDownloadURL(imageUpload);
-      alert("image Uploaded");
 
-      const collectionRef = collection(db, "Test");
-      const docRef = doc(collectionRef, uid);
-      const formData = {
-        ...data,
-        profileImage: downloadUrl,
-      };
-      await setDoc(docRef, formData);
 
-      alert("Data Submited Successfully");
-      setData({
-        name: "",
-        rollNumber: "",
-        email: "",
-        password: "",
-      });
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    }
-  };
+
+
+
+  const handleSubmit = async () => {};
 
   return (
     <div>
