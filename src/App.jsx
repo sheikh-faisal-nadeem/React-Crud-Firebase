@@ -65,6 +65,8 @@ const App = () => {
     } catch (error) {
       console.log(error);
       alert(error);
+
+      
     }
   };
 
