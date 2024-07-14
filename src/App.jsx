@@ -3,7 +3,7 @@ import { auth, db, storage } from "./Firebase/Config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import "./App.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const App = () => {
   const [localUrl, setLocalUrl] = useState("");
@@ -66,7 +66,7 @@ const App = () => {
       console.log(error);
       alert(error);
 
-      
+
     }
   };
 
