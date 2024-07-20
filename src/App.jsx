@@ -26,6 +26,18 @@ const App = () => {
 
   // handleImageChange
 
+
+
+
+
+
+
+
+
+
+
+  
+
   const handleImageChange = (e) => {
     const img = e?.target?.files[0];
     const imgUrl = URL.createObjectURL(img);
